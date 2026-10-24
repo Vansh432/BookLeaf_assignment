@@ -1,10 +1,13 @@
 import { Router } from 'express';
 import mongoose from 'mongoose';
+import authRoutes from './modules/auth/auth.route.js';
 import { sendSuccess } from './shared/responses/apiResponse.js';
 
 const MONGOOSE_CONNECTED = 1;
 
 const router = Router();
+
+router.use('/auth', authRoutes);
 
 router.get('/health', (req, res) => {
   sendSuccess(res, {

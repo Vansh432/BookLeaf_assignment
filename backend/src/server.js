@@ -24,6 +24,14 @@ const start = async () => {
   }
 };
 
+server.on('error', (error) => {
+  logger.error(
+    error.code === 'EADDRINUSE' ? `Port ${env.port} is already in use` : 'HTTP server error',
+    { error: error.message },
+  );
+  process.exit(1);
+});
+
 process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('unhandledRejection', (reason) => logger.error('Unhandled promise rejection', { reason }));
