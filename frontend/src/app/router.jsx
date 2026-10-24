@@ -1,7 +1,15 @@
 import { createBrowserRouter } from 'react-router'
 import PortalLayout from '../layouts/PortalLayout.jsx'
 import { LoginPage, ProtectedRoute, RoleRoute } from '../modules/auth/index.js'
+import { MyBooksPage } from '../modules/books/index.js'
 import HomePage from '../modules/dashboard/pages/HomePage.jsx'
+import {
+  AdminTicketPage,
+  MyTicketsPage,
+  NewTicketPage,
+  TicketDetailPage,
+  TicketQueuePage,
+} from '../modules/tickets/index.js'
 import NotFoundPage from '../shared/components/feedback/NotFoundPage.jsx'
 import { ROLES } from '../shared/constants/app.js'
 
@@ -17,12 +25,20 @@ const router = createBrowserRouter([
           { index: true, element: <HomePage /> },
           {
             element: <RoleRoute allowedRoles={[ROLES.AUTHOR]} />,
-            children: [],
+            children: [
+              { path: 'books', element: <MyBooksPage /> },
+              { path: 'tickets', element: <MyTicketsPage /> },
+              { path: 'tickets/new', element: <NewTicketPage /> },
+              { path: 'tickets/:ticketId', element: <TicketDetailPage /> },
+            ],
           },
           {
             path: 'admin',
             element: <RoleRoute allowedRoles={[ROLES.ADMIN]} />,
-            children: [],
+            children: [
+              { path: 'tickets', element: <TicketQueuePage /> },
+              { path: 'tickets/:ticketId', element: <AdminTicketPage /> },
+            ],
           },
         ],
       },

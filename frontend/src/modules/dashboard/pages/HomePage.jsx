@@ -1,20 +1,16 @@
-import { useAuth } from '../../auth/index.js'
+import { Navigate } from 'react-router'
 import { ROLES } from '../../../shared/constants/app.js'
+import { useAuth } from '../../auth/index.js'
 
-const ROLE_INTRO = {
-  [ROLES.AUTHOR]: 'Track your books and royalties, and reach the BookLeaf team when you need help.',
-  [ROLES.ADMIN]: 'Review incoming author queries and respond with AI-assisted drafts.',
+const ROLE_HOME_PATHS = {
+  [ROLES.AUTHOR]: '/books',
+  [ROLES.ADMIN]: '/admin/tickets',
 }
 
+// "/" has no page of its own; each role starts on its main workspace.
 function HomePage() {
   const { user } = useAuth()
-
-  return (
-    <section className="space-y-1">
-      <h1 className="text-2xl font-semibold">Welcome, {user.name}</h1>
-      <p className="text-slate-600">{ROLE_INTRO[user.role]}</p>
-    </section>
-  )
+  return <Navigate to={ROLE_HOME_PATHS[user.role]} replace />
 }
 
 export default HomePage

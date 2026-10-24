@@ -32,7 +32,8 @@ const validate = (schemas) => (req, res, next) => {
     return next(AppError.badRequest('Validation failed', errors));
   }
 
-  req.validated = validated;
+  // Merged so a route can chain validators (e.g. params, then body) without losing earlier results.
+  req.validated = { ...req.validated, ...validated };
   return next();
 };
 

@@ -1,5 +1,3 @@
-export const APP_NAME = 'BookLeaf Portal'
-
 export const ROLES = Object.freeze({
   AUTHOR: 'author',
   ADMIN: 'admin',

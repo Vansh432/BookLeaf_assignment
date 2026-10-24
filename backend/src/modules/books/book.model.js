@@ -23,17 +23,14 @@ const bookSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true, versionKey: false },
+    toJSON: { versionKey: false },
   },
 );
 
 bookSchema.index({ author: 1, publicationDate: -1 });
 bookSchema.index({ isbn: 1 }, { unique: true, partialFilterExpression: { isbn: { $type: 'string' } } });
 
-// Pending royalty is derived rather than stored so it can never drift from earned and paid.
-bookSchema.virtual('royaltyPending').get(function getRoyaltyPending() {
-  return Math.max(this.totalRoyaltyEarned - this.royaltyPaid, 0);
-});
+// royaltyPending is intentionally not stored: book.service derives it as earned - paid.
 
 const Book = mongoose.model('Book', bookSchema);
 

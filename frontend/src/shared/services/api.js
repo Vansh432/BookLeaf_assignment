@@ -28,8 +28,8 @@ const toApiError = (error) => {
   return apiError
 }
 
-// Concurrent 401s share one refresh call, so the refresh token is rotated only once.
-const refreshSession = () => {
+// Concurrent 401s (and the socket reconnect) share one refresh call, so the token is rotated only once.
+export const refreshSession = () => {
   refreshRequest ??= api.post('/auth/refresh').finally(() => {
     refreshRequest = null
   })

@@ -15,6 +15,15 @@ export const apiLimiter = rateLimit({
   handler: (req, res, next) => next(AppError.tooManyRequests()),
 });
 
+// Caps ticket creation per client so a script or stuck form cannot flood the support queue.
+export const createTicketLimiter = rateLimit({
+  ...baseOptions,
+  windowMs: 60 * 60 * 1000,
+  limit: 20,
+  handler: (req, res, next) =>
+    next(AppError.tooManyRequests('You have raised many queries in a short time. Please try again in an hour.')),
+});
+
 // Counts only failed attempts, so legitimate users are not locked out after signing in.
 export const loginLimiter = rateLimit({
   ...baseOptions,

@@ -3,8 +3,10 @@ import app from './app.js';
 import { connectDatabase, disconnectDatabase } from './config/database.js';
 import env from './config/env.js';
 import logger from './config/logger.js';
+import { initSocket } from './config/socket.js';
 
 const server = http.createServer(app);
+initSocket(server);
 
 const shutdown = async (signal) => {
   logger.info(`${signal} received, shutting down`);
