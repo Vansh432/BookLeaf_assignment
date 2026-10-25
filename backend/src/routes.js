@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import mongoose from 'mongoose';
+import aiRoutes from './modules/ai/ai.route.js';
 import authRoutes from './modules/auth/auth.route.js';
 import bookRoutes from './modules/books/book.route.js';
 import ticketRoutes from './modules/tickets/ticket.route.js';
@@ -10,6 +11,7 @@ const MONGOOSE_CONNECTED = 1;
 
 const router = Router();
 
+router.use('/ai', aiRoutes);
 router.use('/auth', authRoutes);
 router.use('/books', bookRoutes);
 router.use('/tickets', ticketRoutes);

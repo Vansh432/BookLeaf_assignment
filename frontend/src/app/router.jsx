@@ -1,5 +1,7 @@
 import { createBrowserRouter } from 'react-router'
 import PortalLayout from '../layouts/PortalLayout.jsx'
+import { AiUsagePage } from '../modules/analytics/index.js'
+import { AuthorDetailPage, AuthorsPage } from '../modules/authors/index.js'
 import { LoginPage, ProtectedRoute, RoleRoute } from '../modules/auth/index.js'
 import { MyBooksPage } from '../modules/books/index.js'
 import HomePage from '../modules/dashboard/pages/HomePage.jsx'
@@ -38,6 +40,9 @@ const router = createBrowserRouter([
             children: [
               { path: 'tickets', element: <TicketQueuePage /> },
               { path: 'tickets/:ticketId', element: <AdminTicketPage /> },
+              { path: 'authors', element: <AuthorsPage /> },
+              { path: 'authors/:authorId', element: <AuthorDetailPage /> },
+              { path: 'ai-usage', element: <AiUsagePage /> },
             ],
           },
         ],

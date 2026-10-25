@@ -1,3 +1,6 @@
 export { default as MyBooksPage } from './pages/MyBooksPage.jsx'
+export { default as BookCard } from './components/BookCard.jsx'
 export { default as BookStatusBadge } from './components/BookStatusBadge.jsx'
+export { default as RoyaltySummary } from './components/RoyaltySummary.jsx'
 export { default as useBooks } from './hooks/useBooks.js'
+export { getBooks } from './services/book.service.js'

@@ -170,6 +170,12 @@ function QueueTable({ tickets, onOpen }) {
               >
                 <td className="px-4 py-3.5">
                   <PriorityBadge priority={ticket.priority} />
+                  {ticket.needsReview && UNRESOLVED.includes(ticket.status) && (
+                    <span className="mt-1.5 flex items-center gap-1 text-xs font-semibold text-amber-700" title="Triage was unsure; check the category and priority">
+                      <Icon name="flag" className="size-3.5" />
+                      Review
+                    </span>
+                  )}
                 </td>
                 <td className="max-w-80 px-4 py-3.5">
                   <p className="font-mono text-xs text-slate-500">{ticket.ticketNumber}</p>

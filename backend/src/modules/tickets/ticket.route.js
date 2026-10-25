@@ -4,6 +4,8 @@ import authenticate from '../../middlewares/auth.js';
 import { createTicketLimiter } from '../../middlewares/rateLimiter.js';
 import authorize from '../../middlewares/role.js';
 import validate from '../../middlewares/validation.js';
+import * as draftController from '../drafts/draft.controller.js';
+import { requestDraftSchema } from '../drafts/draft.validation.js';
 import * as ticketController from './ticket.controller.js';
 import {
   addMessageSchema,
@@ -31,5 +33,9 @@ router.post('/:id/messages', anyRole, withTicketId, validate({ body: addMessageS
 router.patch('/:id', adminOnly, withTicketId, validate({ body: updateTicketSchema }), ticketController.updateTicket);
 router.post('/:id/assign', adminOnly, withTicketId, ticketController.assignToSelf);
 router.post('/:id/notes', adminOnly, withTicketId, validate({ body: addNoteSchema }), ticketController.addInternalNote);
+
+// AI drafts are internal: authors never see them, and nothing is sent until an admin posts a message.
+router.get('/:id/draft', adminOnly, withTicketId, draftController.getDraft);
+router.post('/:id/draft', adminOnly, withTicketId, validate({ body: requestDraftSchema }), draftController.requestDraft);
 
 export default router;

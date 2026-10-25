@@ -4,21 +4,24 @@ import { INPUT_CLASS } from '../../../../shared/components/forms/fieldStyles.js'
 import Button from '../../../../shared/components/ui/Button.jsx'
 import Icon from '../../../../shared/components/ui/Icon.jsx'
 import useAction from '../../../../shared/hooks/useAction.js'
+import { EMPTY_REPLY, REPLY_INPUT_ID } from '../../constants.js'
 import { addMessage } from '../../services/ticket.service.js'
 
 const RESOLVED = 'Resolved'
 
-function ReplyComposer({ ticket, onSent }) {
-  const [body, setBody] = useState('')
+// Controlled by the page, so an AI draft can be dropped in. draftId travels with the reply, letting the
+// API record whether the draft was sent as written or edited.
+function ReplyComposer({ ticket, value, onChange, onSent }) {
   const [pendingAction, setPendingAction] = useState(null)
   const { run: send, isPending, error } = useAction(addMessage)
+  const { body, draftId } = value
 
   const submit = async (status) => {
     setPendingAction(status ?? 'reply')
-    const updated = await send(ticket.id, { body, ...(status && { status }) })
+    const updated = await send(ticket.id, { body, ...(status && { status }), ...(draftId && { draftId }) })
     setPendingAction(null)
     if (updated) {
-      setBody('')
+      onChange(EMPTY_REPLY)
       onSent(updated)
     }
   }
@@ -35,18 +38,26 @@ function ReplyComposer({ ticket, onSent }) {
             <p className="text-xs text-slate-500">Sent instantly to the author’s ticket view</p>
           </div>
         </div>
-        <span className="text-xs text-slate-400">{body.length}/5000</span>
+        <div className="flex items-center gap-3">
+          {draftId && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700">
+              <Icon name="sparkles" className="size-3.5" />
+              From AI draft
+            </span>
+          )}
+          <span className="text-xs text-slate-400">{body.length}/5000</span>
+        </div>
       </div>
-      <label htmlFor="admin-reply" className="sr-only">
+      <label htmlFor={REPLY_INPUT_ID} className="sr-only">
         Reply
       </label>
       <textarea
-        id="admin-reply"
+        id={REPLY_INPUT_ID}
         rows={8}
         maxLength={5000}
         placeholder={`Hi ${ticket.author.name.split(' ')[0]},\n\nThank you for reaching out…`}
         value={body}
-        onChange={(event) => setBody(event.target.value)}
+        onChange={(event) => onChange({ ...value, body: event.target.value })}
         className={`${INPUT_CLASS} resize-y leading-relaxed`}
       />
       <InlineError error={error} />

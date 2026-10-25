@@ -5,6 +5,8 @@ import { buildPagination, paginationStages } from '../../shared/pagination/pagin
 import { withIds } from '../../shared/utils/serialize.js';
 import Book from '../books/book.model.js';
 import { getBook } from '../books/book.service.js';
+import { scheduleSummaryRefresh } from '../context/context.service.js';
+import { enqueueTriage } from '../triage/triage.jobs.js';
 import { publishTicketChange, TICKET_ACTIONS } from './ticket.events.js';
 import Ticket from './ticket.model.js';
 
@@ -106,7 +108,7 @@ export const getTicket = async (user, ticketId) => {
   return withIds(ticket);
 };
 
-export const createTicket = async (user, { bookId, subject, description }) => {
+export const createTicket = async (user, { bookId, subject, description }, { correlationId } = {}) => {
   if (bookId && !(await Book.exists({ _id: bookId, author: user.id }))) {
     throw AppError.badRequest('Validation failed', [
       { location: 'body', field: 'bookId', message: 'Select one of your own books' },
@@ -115,6 +117,8 @@ export const createTicket = async (user, { bookId, subject, description }) => {
 
   const ticket = await Ticket.create({ author: user.id, book: bookId, subject, description });
   publishTicketChange({ ticket, action: TICKET_ACTIONS.CREATED, actor: user });
+  // Runs in the background: the ticket is already saved, so triage (or AI) failures cannot affect it.
+  enqueueTriage(ticket._id, { correlationId });
   return getTicket(user, ticket._id);
 };
 
@@ -175,6 +179,7 @@ const adminProjectionStages = [
       assignedTo: 1,
       priority: 1,
       classificationStatus: '$classification.status',
+      needsReview: '$classification.needsReview',
       firstRespondedAt: 1,
     },
   },
@@ -214,14 +219,25 @@ export const listTickets = async (user, { page, limit, status, ...filters }) => 
   };
 };
 
-export const addMessage = async (user, ticketId, { body, status }) => {
+// Records that the admin sent the current AI draft, and whether they changed it first.
+// A draftId that no longer matches (a newer draft was generated) is ignored rather than misattributed.
+const draftUsage = (ticket, draftId, body, user, now) =>
+  draftId && ticket.aiDraft?.id === draftId
+    ? { 'aiDraft.sent': { at: now, by: user.id, edited: body.trim() !== (ticket.aiDraft.content ?? '').trim() } }
+    : {};
+
+export const addMessage = async (user, ticketId, { body, status, draftId }, { correlationId } = {}) => {
   const admin = isAdmin(user);
 
-  if (!admin && status) {
-    throw AppError.forbidden('Only the BookLeaf team can change a ticket status');
+  if (!admin && (status || draftId)) {
+    throw AppError.forbidden('Only the BookLeaf team can change a ticket status or send AI drafts');
   }
 
-  const ticket = await findTicketOrThrow(user, ticketId, 'ticketNumber author status resolvedAt firstRespondedAt');
+  const ticket = await findTicketOrThrow(
+    user,
+    ticketId,
+    'ticketNumber author status resolvedAt firstRespondedAt aiDraft.id aiDraft.content',
+  );
   let nextStatus = ticket.status;
 
   if (admin) {
@@ -242,17 +258,40 @@ export const addMessage = async (user, ticketId, { body, status }) => {
       lastActivityAt: now,
       ...statusChange(ticket, nextStatus, now),
       ...(admin && !ticket.firstRespondedAt && { firstRespondedAt: now }),
+      ...draftUsage(ticket, draftId, body, user, now),
     },
   });
 
   publishTicketChange({ ticket, action: TICKET_ACTIONS.MESSAGE, actor: user });
+  // Background and best-effort: the message is saved whether or not the summary can be refreshed.
+  scheduleSummaryRefresh(ticketId, { correlationId });
   return getTicket(user, ticketId);
 };
 
-export const updateTicket = async (user, ticketId, { status, category, priority }) => {
-  const ticket = await findTicketOrThrow(user, ticketId, 'ticketNumber author status resolvedAt');
+const SUGGESTION_FIELDS = { category: 'suggestedCategory', priority: 'suggestedPriority' };
+
+// Records each changed category/priority with what triage had suggested, for auditing and accuracy metrics.
+const overrideEntries = (ticket, changes, user, now) =>
+  Object.entries(changes)
+    .filter(([field, value]) => value && value !== ticket[field])
+    .map(([field, value]) => ({
+      field,
+      from: ticket[field],
+      to: value,
+      suggested: ticket.classification?.[SUGGESTION_FIELDS[field]] ?? null,
+      by: user.id,
+      at: now,
+    }));
+
+export const updateTicket = async (user, ticketId, { status, category, priority, reviewed }) => {
+  const ticket = await findTicketOrThrow(
+    user,
+    ticketId,
+    'ticketNumber author status resolvedAt category priority classification.suggestedCategory classification.suggestedPriority',
+  );
   const now = new Date();
   const statusUpdate = status ? statusChange(ticket, status, now) : {};
+  const overrides = overrideEntries(ticket, { category, priority }, user, now);
 
   if (status) {
     assertTransition(ticket.status, status);
@@ -260,16 +299,20 @@ export const updateTicket = async (user, ticketId, { status, category, priority 
 
   await applyUpdate(ticket, {
     $set: {
-      // Overrides only change the effective values; the AI's original suggestion stays in `classification`.
+      // Overrides only change the effective values; the original suggestion stays in `classification`.
       ...(category && { category }),
       ...(priority && { priority }),
+      // An admin who sets the category or priority, or confirms them, has reviewed the triage.
+      ...((overrides.length || reviewed) && { 'classification.needsReview': false }),
       ...statusUpdate,
       // Status changes are visible to the author, so they count as activity on the ticket.
       ...(statusUpdate.status && { lastActivityAt: now }),
     },
+    ...(overrides.length && { $push: { 'classification.overrides': { $each: overrides } } }),
   });
 
-  publishTicketChange({ ticket, action: TICKET_ACTIONS.UPDATED, actor: user });
+  // Authors see status and category only, so priority or review changes are announced to admins alone.
+  publishTicketChange({ ticket, action: TICKET_ACTIONS.UPDATED, actor: user, adminOnly: !status && !category });
   return getTicket(user, ticketId);
 };
 

@@ -8,7 +8,11 @@ export const TICKET_ACTIONS = Object.freeze({
   UPDATED: 'updated',
   ASSIGNED: 'assigned',
   NOTE: 'note',
+  CLASSIFIED: 'classified',
 });
+
+// Actor for changes made by background jobs rather than a signed-in user.
+export const SYSTEM_ACTOR = Object.freeze({ id: 'system', role: 'system' });
 
 // Payloads carry identifiers only. Clients refetch through the REST API, which applies the
 // role-based views, so nothing internal (notes, AI output) can leak over the socket.

@@ -2,7 +2,7 @@ import { sendSuccess } from '../../shared/responses/apiResponse.js';
 import * as ticketService from './ticket.service.js';
 
 export const createTicket = async (req, res) => {
-  const ticket = await ticketService.createTicket(req.user, req.validated.body);
+  const ticket = await ticketService.createTicket(req.user, req.validated.body, { correlationId: req.id });
   sendSuccess(res, { statusCode: 201, message: 'Your query has been submitted', data: { ticket } });
 };
 
@@ -17,7 +17,9 @@ export const getTicket = async (req, res) => {
 };
 
 export const addMessage = async (req, res) => {
-  const ticket = await ticketService.addMessage(req.user, req.validated.params.id, req.validated.body);
+  const ticket = await ticketService.addMessage(req.user, req.validated.params.id, req.validated.body, {
+    correlationId: req.id,
+  });
   sendSuccess(res, { statusCode: 201, message: 'Message sent', data: { ticket } });
 };
 

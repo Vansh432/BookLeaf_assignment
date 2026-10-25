@@ -1,0 +1,165 @@
+{
+  "source": "BookLeaf Knowledge Base (Technical Assignment, Author Support & Communication Portal)",
+  "chunks": [
+    {
+      "chunkId": "company-overview",
+      "section": "Company Overview",
+      "title": "About BookLeaf Publishing",
+      "category": null,
+      "keywords": ["bookleaf", "package", "standard free", "bestseller breakthrough", "services", "delhi", "warehouse"],
+      "content": "BookLeaf Publishing is a self-publishing company operating in India and the US. We offer two publishing packages: Standard Free (no upfront cost) and Bestseller Breakthrough (premium, paid package with marketing and distribution add-ons). We handle cover design, typesetting, ISBN assignment, printing, distribution, and royalty management for our authors. Our in-house printing facility and warehouse are located in Delhi. We also work with print partners including Repro India and Epitome Books."
+    },
+    {
+      "chunkId": "royalty-calculation",
+      "section": "Royalty Policy",
+      "title": "Royalty split and net profit calculation",
+      "category": "Royalty & Payments",
+      "keywords": ["royalty", "split", "80/20", "net profit", "mrp", "printing cost", "commission", "shipping", "low", "amount", "calculation", "breakdown"],
+      "content": "BookLeaf follows an 80/20 royalty split: 80% of the net profit per book goes to the author, 20% to BookLeaf. Net profit = MRP minus printing cost, platform commission (Amazon/Flipkart), and shipping charges. Authors can view a detailed royalty breakdown in their dashboard, showing sales figures per platform."
+    },
+    {
+      "chunkId": "royalty-payout-schedule",
+      "section": "Royalty Policy",
+      "title": "Royalty payout cycle, threshold and payment method",
+      "category": "Royalty & Payments",
+      "keywords": ["royalty", "payout", "payment", "quarterly", "quarter", "45 days", "threshold", "1000", "roll over", "bank", "transfer", "not received", "pending", "delayed"],
+      "content": "Royalties are calculated quarterly and paid within 45 days of the quarter ending. Minimum payout threshold: ₹1,000. If accumulated royalties are below this, they roll over to the next quarter. Payouts are made via bank transfer to the account linked in the author's dashboard."
+    },
+    {
+      "chunkId": "isbn-assignment",
+      "section": "ISBN Policy",
+      "title": "How ISBNs are assigned",
+      "category": "ISBN & Metadata Issues",
+      "keywords": ["isbn", "assigned", "imprint", "publisher", "own imprint", "unique"],
+      "content": "Every book published through BookLeaf receives a unique ISBN assigned by BookLeaf. ISBNs are registered under BookLeaf's publisher imprint. If an author wants an ISBN under their own imprint, they need to obtain it independently."
+    },
+    {
+      "chunkId": "isbn-errors",
+      "section": "ISBN Policy",
+      "title": "Reporting ISBN errors",
+      "category": "ISBN & Metadata Issues",
+      "keywords": ["isbn", "error", "duplicate", "wrong", "different", "mismatch", "linked", "escalate", "production team", "high priority"],
+      "content": "If an author reports an ISBN error (duplicate, wrong book linked), it is treated as a high-priority issue and escalated to the production team."
+    },
+    {
+      "chunkId": "metadata-updates",
+      "section": "Metadata Updates",
+      "title": "Updating book metadata after publication",
+      "category": "General Inquiry",
+      "keywords": ["metadata", "description", "update", "change", "blurb", "author bio", "amazon", "listing", "live"],
+      "content": "Metadata updates, such as a book description, can be submitted through the dashboard or by emailing the BookLeaf team after a book is live. Changes typically reflect on platforms within 3-5 business days."
+    },
+    {
+      "chunkId": "printing-turnaround",
+      "section": "Printing & Quality",
+      "title": "Print partners and turnaround",
+      "category": "Printing & Quality",
+      "keywords": ["printing", "print", "turnaround", "5-7 business days", "repro india", "epitome books", "in-house", "overflow", "format", "order"],
+      "content": "In-house printing handles most orders. Overflow or specific format requirements go to Repro India or Epitome Books. Standard print turnaround: 5-7 business days from order confirmation."
+    },
+    {
+      "chunkId": "printing-quality-reprints",
+      "section": "Printing & Quality",
+      "title": "Print quality issues and free reprints",
+      "category": "Printing & Quality",
+      "keywords": ["quality", "misprint", "binding", "defect", "color", "blurry", "misaligned", "damaged", "reprint", "photos", "author copies"],
+      "content": "If an author reports a quality issue (misprints, binding defects, color inconsistency), BookLeaf arranges a free reprint after verification. The author may need to share photos of the defective copy."
+    },
+    {
+      "chunkId": "distribution-platforms",
+      "section": "Distribution & Availability",
+      "title": "Sales platforms and listing timelines",
+      "category": "Distribution & Availability",
+      "keywords": ["distribution", "amazon india", "flipkart", "amazon us", "amazon uk", "bookleaf store", "listing", "go live", "7-10 business days", "platform"],
+      "content": "Books are listed on Amazon India, Flipkart, Amazon US, Amazon UK, and the BookLeaf Store. New listings typically go live within 7-10 business days after publication is complete."
+    },
+    {
+      "chunkId": "distribution-unavailable",
+      "section": "Distribution & Availability",
+      "title": "Book showing as unavailable",
+      "category": "Distribution & Availability",
+      "keywords": ["unavailable", "currently unavailable", "out of stock", "stock", "sync", "re-sync", "24-48 hours", "not showing", "missing"],
+      "content": "If a book is showing as unavailable on a platform, it usually indicates a stock sync issue. BookLeaf's team can trigger a re-sync within 24-48 hours."
+    },
+    {
+      "chunkId": "production-stages",
+      "section": "Production Stages",
+      "title": "Production pipeline",
+      "category": "Book Status & Production Updates",
+      "keywords": ["production", "stage", "status", "manuscript", "editing", "cover design", "typesetting", "proofreading", "isbn assignment", "printing", "distribution setup", "published"],
+      "content": "A book goes through the following stages: Manuscript Received, Editing (if opted), Cover Design, Typesetting, Proofreading, ISBN Assignment, Printing, Distribution Setup, Published & Live. Authors are updated at each stage via email."
+    },
+    {
+      "chunkId": "production-delays",
+      "section": "Production Stages",
+      "title": "Common production delays",
+      "category": "Book Status & Production Updates",
+      "keywords": ["delay", "delayed", "stuck", "waiting", "approval", "cover design", "proofreading", "revision", "rounds", "how long", "when"],
+      "content": "Delays typically happen at Cover Design (waiting for author approval) and Proofreading (revision rounds)."
+    },
+    {
+      "chunkId": "communication-tone",
+      "section": "Communication Tone Guidelines",
+      "title": "How BookLeaf communicates with authors",
+      "category": null,
+      "keywords": ["tone", "empathetic", "professional", "acknowledge", "specific", "own it", "timeline", "next step"],
+      "content": "Always empathetic and professional: authors are our partners, not customers to be managed. Acknowledge the author's concern before jumping to solutions. Be specific: include actual numbers, dates, and statuses wherever possible rather than vague reassurances. If something is BookLeaf's fault (delayed royalties, ISBN error), own it directly, with no corporate deflection. If the issue requires escalation or investigation, give a clear timeline (\"Our team will look into this and get back to you within 48 hours\") rather than open-ended promises. Always end with a clear next step for the author and/or the BookLeaf team."
+    },
+    {
+      "chunkId": "guidance-royalty-not-received",
+      "section": "Response Guidance",
+      "title": "Responding to a royalty that has not been received",
+      "category": "Royalty & Payments",
+      "keywords": ["royalty", "not received", "haven't received", "months", "payout", "overdue", "bank details"],
+      "content": "Example query: \"I published my book 4 months ago and still haven't received any royalty.\" Acknowledge the frustration. Explain the quarterly royalty cycle and 45-day payout window. Check if their bank details are linked. Provide the specific next payout date. If the payment is genuinely overdue, escalate with a 48-hour resolution timeline."
+    },
+    {
+      "chunkId": "guidance-royalty-too-low",
+      "section": "Response Guidance",
+      "title": "Responding to a royalty amount that seems low",
+      "category": "Royalty & Payments",
+      "keywords": ["royalty", "low", "too low", "amount", "copies", "sold", "only received", "breakdown"],
+      "content": "Example query: \"My royalty amount seems too low. I sold 200 copies but only received ₹3,000.\" Explain the net profit calculation: MRP minus printing, platform commission, and shipping. Offer to share a detailed line-by-line royalty breakdown. Don't be defensive; offer transparency."
+    },
+    {
+      "chunkId": "guidance-isbn-mismatch",
+      "section": "Response Guidance",
+      "title": "Responding to an ISBN mismatch",
+      "category": "ISBN & Metadata Issues",
+      "keywords": ["isbn", "different", "mismatch", "amazon", "physical copy", "wrong"],
+      "content": "Example query: \"My book is showing a different ISBN on Amazon than what's on the physical copy.\" Treat as high priority. Acknowledge this is a serious data issue. Confirm you are escalating to the production team immediately. Provide a 48-hour resolution timeline."
+    },
+    {
+      "chunkId": "guidance-print-quality",
+      "section": "Response Guidance",
+      "title": "Responding to poor print quality",
+      "category": "Printing & Quality",
+      "keywords": ["print quality", "terrible", "blurry", "misaligned", "author copies", "defective", "reprint"],
+      "content": "Example query: \"I received my author copies and the print quality is terrible. The images are blurry and pages are misaligned.\" Apologise sincerely. Ask the author to share photos of the defective copies. Confirm that BookLeaf will arrange a free reprint once verified. Provide a timeline of 5-7 business days for the reprint."
+    },
+    {
+      "chunkId": "guidance-unavailable-listing",
+      "section": "Response Guidance",
+      "title": "Responding to a listing showing as unavailable",
+      "category": "Distribution & Availability",
+      "keywords": ["currently unavailable", "amazon", "published", "unavailable", "re-sync"],
+      "content": "Example query: \"My book is published but it's showing as 'Currently Unavailable' on Amazon.\" Explain that this is typically a stock sync issue. Confirm you're triggering a re-sync with the distribution team. Set expectation: 24-48 hours for it to go live again."
+    },
+    {
+      "chunkId": "guidance-production-delay",
+      "section": "Response Guidance",
+      "title": "Responding to a production delay",
+      "category": "Book Status & Production Updates",
+      "keywords": ["weeks", "still in", "typesetting", "when will", "done", "delay", "status"],
+      "content": "Example query: \"It's been 3 weeks and my book is still in typesetting. When will it be done?\" Check the actual production status. If it's delayed, be honest about why (e.g., waiting on author approval for proofs). Provide a specific updated timeline. Don't blame the author even if the delay is on their side; frame it collaboratively."
+    },
+    {
+      "chunkId": "guidance-metadata-update",
+      "section": "Response Guidance",
+      "title": "Responding to a metadata update request",
+      "category": "General Inquiry",
+      "keywords": ["update", "description", "amazon", "live", "metadata", "change"],
+      "content": "Example query: \"Can I update the description of my book on Amazon after it's already live?\" Yes, metadata updates can be submitted through the dashboard or by emailing the BookLeaf team. Changes typically reflect on platforms within 3-5 business days."
+    }
+  ]
+}

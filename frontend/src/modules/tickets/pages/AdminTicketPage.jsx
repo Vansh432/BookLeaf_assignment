@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams } from 'react-router'
 import ErrorState from '../../../shared/components/feedback/ErrorState.jsx'
 import PageLoader from '../../../shared/components/feedback/PageLoader.jsx'
@@ -6,6 +7,7 @@ import { ROLES } from '../../../shared/constants/app.js'
 import useApiQuery from '../../../shared/hooks/useApiQuery.js'
 import { formatDateTime, formatDuration, hoursSince } from '../../../shared/utils/format.js'
 import { useAuth } from '../../auth/index.js'
+import AiDraftPanel from '../components/admin/AiDraftPanel.jsx'
 import AuthorBookContext from '../components/admin/AuthorBookContext.jsx'
 import InternalNotes from '../components/admin/InternalNotes.jsx'
 import ReplyComposer from '../components/admin/ReplyComposer.jsx'
@@ -13,7 +15,7 @@ import TicketControls from '../components/admin/TicketControls.jsx'
 import ConversationThread from '../components/ConversationThread.jsx'
 import { PriorityBadge, StatusBadge } from '../components/TicketBadges.jsx'
 import TicketHero from '../components/TicketHero.jsx'
-import { GENERAL_QUERY_LABEL, STALE_AFTER_HOURS, UNRESOLVED_STATUSES } from '../constants.js'
+import { EMPTY_REPLY, GENERAL_QUERY_LABEL, REPLY_INPUT_ID, STALE_AFTER_HOURS, UNRESOLVED_STATUSES } from '../constants.js'
 import useTicketChanges from '../hooks/useTicketChanges.js'
 import { getTicket } from '../services/ticket.service.js'
 
@@ -64,6 +66,15 @@ function AdminTicketPage() {
   const { data: ticket, error, isLoading, reload, setData } = useApiQuery(() => getTicket(ticketId), `admin-ticket:${ticketId}`)
   // Author follow-ups and other admins' changes appear while this ticket is open; a draft reply is kept.
   useTicketChanges(() => reload(), ticketId)
+  const [reply, setReply] = useState(EMPTY_REPLY)
+
+  const applyDraft = (draft) => {
+    if (reply.body.trim() && reply.body !== draft.content && !window.confirm('Replace your current reply with the AI draft?')) {
+      return
+    }
+    setReply({ body: draft.content, draftId: draft.id })
+    document.getElementById(REPLY_INPUT_ID)?.focus()
+  }
 
   if (!ticket && isLoading) {
     return <PageLoader fullScreen={false} />
@@ -98,7 +109,8 @@ function AdminTicketPage() {
           <div className="rounded-2xl border border-slate-200/60 bg-linear-to-b from-slate-100/80 to-slate-50 p-4 sm:p-6">
             <ConversationThread ticket={ticket} viewerRole={ROLES.ADMIN} authorName={ticket.author.name} />
           </div>
-          <ReplyComposer ticket={ticket} onSent={setData} />
+          <AiDraftPanel ticket={ticket} onUseDraft={applyDraft} />
+          <ReplyComposer ticket={ticket} value={reply} onChange={setReply} onSent={setData} />
         </div>
 
         <aside className="space-y-6">

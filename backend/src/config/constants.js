@@ -45,8 +45,39 @@ export const CLASSIFICATION_STATUSES = Object.freeze({
   FAILED: 'failed',
 });
 
-// ai: produced by the LLM, fallback: keyword rules used when the LLM is unavailable.
+export const AI_OPERATIONS = Object.freeze({
+  CLASSIFICATION: 'classification',
+  PRIORITY: 'priority',
+  SUMMARY: 'summary',
+  DRAFT: 'draft',
+  EMBEDDING: 'embedding',
+});
+
+// success: the provider answered with valid output; failed: the call was attempted and failed;
+// rejected: a local guard (budget, limit, circuit, configuration) stopped it before any provider call.
+export const AI_CALL_STATUSES = Object.freeze({
+  SUCCESS: 'success',
+  FAILED: 'failed',
+  REJECTED: 'rejected',
+});
+
+// rules: deterministic rules were confident, so no model was called; ai: decided by the LLM;
+// fallback: the LLM was needed but unavailable, so the rules' best guess was used (and flagged for review).
 export const CLASSIFICATION_SOURCES = Object.freeze({
+  RULES: 'rules',
   AI: 'ai',
   FALLBACK: 'fallback',
+});
+
+// ready: a draft exists; no_policy: no relevant policy was found, so nothing was generated and the
+// admin writes the reply; unavailable: AI failed or was refused (budget, limits), so the admin writes it.
+export const DRAFT_STATUSES = Object.freeze({
+  READY: 'ready',
+  NO_POLICY: 'no_policy',
+  UNAVAILABLE: 'unavailable',
+});
+
+export const PRIORITY_SOURCES = Object.freeze({
+  RULES: 'rules',
+  AI: 'ai',
 });

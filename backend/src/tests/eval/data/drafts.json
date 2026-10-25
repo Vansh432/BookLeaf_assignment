@@ -1,0 +1,14 @@
+{
+  "description": "Draft scenarios on real sample-dataset authors and books. mustMatch are case-insensitive regular expressions the reply must contain (facts and policy timelines it should state); expectNoPolicy marks queries no policy covers, where no draft should be generated.",
+  "drafts": [
+    { "id": "draft-01", "author": "rohit.kapoor@email.com", "book": "BK003", "category": "Royalty & Payments", "subject": "Royalty not received", "description": "I have not received my royalty for Code & Karma for a long time. What is going on?", "mustMatch": ["5,280", "48 hours", "overdue|delay"] },
+    { "id": "draft-02", "author": "rohit.kapoor@email.com", "book": "BK003", "category": "ISBN & Metadata Issues", "subject": "Different ISBN on Amazon", "description": "My book is showing a different ISBN on Amazon than what's on the physical copy.", "mustMatch": ["48 hours", "production team"] },
+    { "id": "draft-03", "author": "sneha.kulkarni@email.com", "book": "BK013", "category": "Book Status & Production Updates", "subject": "Still in production", "description": "It has been 3 weeks and my book is still stuck at the same stage. When will it be done?", "mustMatch": ["cover design"] },
+    { "id": "draft-04", "author": "priya.sharma@email.com", "book": "BK001", "category": "Printing & Quality", "subject": "Blurry author copies", "description": "I received my author copies and the images are blurry and pages are misaligned.", "mustMatch": ["photo", "reprint", "5\\s*(-|–|to)\\s*7"] },
+    { "id": "draft-05", "author": "vikram.joshi@email.com", "book": "BK006", "category": "Distribution & Availability", "subject": "Unavailable on Flipkart", "description": "My book Debugging Life is showing as unavailable on Flipkart.", "mustMatch": ["24\\s*(-|–|to)\\s*48", "sync"] },
+    { "id": "draft-06", "author": "kavita.deshmukh@email.com", "book": "BK016", "category": "Royalty & Payments", "subject": "Never received a payout", "description": "My dashboard shows ₹850 pending for The Nagpur Notebooks but I have never received a payout. Why?", "mustMatch": ["850", "1,000", "roll"] },
+    { "id": "draft-07", "author": "meera.nair@email.com", "book": null, "category": "General Inquiry", "subject": "Update description", "description": "Can I update the description of my book on Amazon after it's already live?", "mustMatch": ["3\\s*(-|–|to)\\s*5"] },
+    { "id": "draft-08", "author": "arjun.malhotra@email.com", "book": "BK010", "category": "Royalty & Payments", "subject": "Royalty seems low", "description": "I have sold a lot of copies of Turban Tales but my royalty seems very low. How is it calculated?", "mustMatch": ["MRP|net profit", "breakdown"] },
+    { "id": "draft-09", "author": "diya.chatterjee@email.com", "book": null, "category": null, "subject": "Weather", "description": "What is the weather going to be like in Kolkata this weekend?", "expectNoPolicy": true }
+  ]
+}

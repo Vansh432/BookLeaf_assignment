@@ -14,6 +14,17 @@ export const TICKET_PRIORITIES = ['Critical', 'High', 'Medium', 'Low']
 
 export const GENERAL_QUERY_LABEL = 'General / Account level'
 
+// The admin reply box; an AI draft is copied into it and keeps its id so the API can record edits.
+export const REPLY_INPUT_ID = 'admin-reply'
+export const EMPTY_REPLY = { body: '', draftId: null }
+
+// Mirrors the API's AI draft statuses.
+export const DRAFT_STATUSES = {
+  READY: 'ready',
+  NO_POLICY: 'no_policy',
+  UNAVAILABLE: 'unavailable',
+}
+
 // Unresolved tickets waiting longer than this are flagged in the queue.
 export const STALE_AFTER_HOURS = 48
 

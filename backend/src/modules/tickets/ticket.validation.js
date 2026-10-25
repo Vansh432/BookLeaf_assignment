@@ -50,6 +50,8 @@ export const addMessageSchema = z.object({
   body: z.string().trim().min(1, 'Message cannot be empty').max(5000, 'Message must be at most 5000 characters'),
   // Admin-only: lets the team reply and resolve in one step.
   status: statusSchema.optional(),
+  // Admin-only: the AI draft this reply started from, so its use (as-is or edited) is recorded.
+  draftId: z.uuid().optional(),
 });
 
 export const updateTicketSchema = z
@@ -57,9 +59,11 @@ export const updateTicketSchema = z
     status: statusSchema.optional(),
     category: z.enum(TICKET_CATEGORIES).optional(),
     priority: z.enum(TICKET_PRIORITIES).optional(),
+    // Confirms triage's suggestion as-is, clearing its review flag without changing any value.
+    reviewed: z.literal(true).optional(),
   })
   .refine((changes) => Object.keys(changes).length > 0, {
-    message: 'Provide at least one of status, category or priority',
+    message: 'Provide at least one of status, category, priority or reviewed',
   });
 
 export const addNoteSchema = z.object({

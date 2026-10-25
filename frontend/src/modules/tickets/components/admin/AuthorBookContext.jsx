@@ -1,3 +1,5 @@
+import { Link } from 'react-router'
+import Icon from '../../../../shared/components/ui/Icon.jsx'
 import { formatCurrency, formatDate, getInitials } from '../../../../shared/utils/format.js'
 import { BookStatusBadge } from '../../../books/index.js'
 import { GENERAL_QUERY_LABEL } from '../../constants.js'
@@ -31,6 +33,10 @@ function AuthorBookContext({ author, book }) {
         <Row label="City">{author.city ?? '—'}</Row>
         <Row label="Author since">{formatDate(author.joinedDate)}</Row>
       </dl>
+      <Link to={`/admin/authors/${author.id}`} className="inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:text-brand-800">
+        View all books and tickets
+        <Icon name="chevronRight" className="size-4" />
+      </Link>
 
       <div className="border-t border-slate-100 pt-4">
         {book ? (

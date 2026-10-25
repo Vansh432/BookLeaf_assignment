@@ -7,7 +7,7 @@ import Book from './book.model.js';
 const { ObjectId } = mongoose.Types;
 
 // Pending royalty is derived here rather than stored, so it can never drift from earned and paid.
-const royaltyPendingExpression = { $max: [{ $subtract: ['$totalRoyaltyEarned', '$royaltyPaid'] }, 0] };
+export const royaltyPendingExpression = { $max: [{ $subtract: ['$totalRoyaltyEarned', '$royaltyPaid'] }, 0] };
 
 const BOOK_PROJECTION = {
   _id: 0,

@@ -14,7 +14,11 @@ const NAV_ITEMS = {
     { to: '/books', label: 'My Books', icon: 'book' },
     { to: '/tickets', label: 'My Tickets', icon: 'ticket' },
   ],
-  [ROLES.ADMIN]: [{ to: '/admin/tickets', label: 'Ticket Queue', icon: 'inbox' }],
+  [ROLES.ADMIN]: [
+    { to: '/admin/tickets', label: 'Ticket Queue', icon: 'inbox' },
+    { to: '/admin/authors', label: 'Authors', icon: 'user' },
+    { to: '/admin/ai-usage', label: 'AI Usage', icon: 'trendingUp' },
+  ],
 }
 
 const navLinkClass = ({ isActive }) =>

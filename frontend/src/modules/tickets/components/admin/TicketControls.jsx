@@ -6,6 +6,31 @@ import useAction from '../../../../shared/hooks/useAction.js'
 import { assignToSelf, updateTicket } from '../../services/ticket.service.js'
 import { TICKET_CATEGORIES, TICKET_PRIORITIES, TICKET_STATUSES } from '../../constants.js'
 
+// Triage flags uncertain or conflicting suggestions; setting the category or priority clears the flag.
+function ReviewFlag({ classification, onConfirm, isConfirming }) {
+  if (!classification?.needsReview) {
+    return null
+  }
+
+  return (
+    <div role="status" className="flex gap-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs text-amber-900">
+      <Icon name="flag" className="mt-0.5 size-4 shrink-0" />
+      <div className="space-y-1">
+        <p className="font-semibold">Triage needs your review</p>
+        <ul className="list-disc space-y-0.5 pl-4">
+          {classification.reviewReasons.map((reason) => (
+            <li key={reason}>{reason}</li>
+          ))}
+        </ul>
+        <p className="text-amber-700">Change the category or priority below, or confirm them as they are.</p>
+        <Button variant="secondary" icon="check" isLoading={isConfirming} onClick={onConfirm} className="mt-1 px-3 py-1.5">
+          Looks right
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 // Shows where an effective value came from: still pending, the AI's suggestion, or an admin override.
 function SuggestionHint({ classification, field, value }) {
   if (classification?.status === 'pending') {
@@ -17,7 +42,13 @@ function SuggestionHint({ classification, field, value }) {
     return null
   }
 
-  const source = classification.source === 'fallback' ? 'Rules' : 'AI'
+  const sourceField = field === 'suggestedPriority' ? 'prioritySource' : 'source'
+  const sourceLabels = { ai: 'AI', rules: 'Rules', fallback: 'Rules (AI unavailable)' }
+  const confidence =
+    field === 'suggestedCategory' && classification.confidence != null
+      ? ` · ${Math.round(classification.confidence * 100)}% confident`
+      : ''
+  const source = `${sourceLabels[classification[sourceField]] ?? 'Rules'}${confidence}`
   return suggested === value ? (
     <p className="flex items-center gap-1 text-xs text-slate-500">
       <Icon name="sparkles" className="size-3.5 text-brand-500" />
@@ -71,6 +102,8 @@ function TicketControls({ ticket, currentUserId, onUpdated }) {
   return (
     <section className="space-y-4 rounded-2xl border border-slate-200/70 bg-white p-5 shadow-card">
       <h2 className="font-bold text-slate-900">Ticket details</h2>
+
+      <ReviewFlag classification={ticket.classification} onConfirm={() => change('reviewed', true)} isConfirming={update.isPending} />
 
       <div className="flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-2.5">
         <span className="flex min-w-0 items-center gap-2 text-sm">

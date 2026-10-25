@@ -1,1 +1,1 @@
-export { getAuthors } from './services/user.service.js'
+export { getAuthor, getAuthors } from './services/user.service.js'

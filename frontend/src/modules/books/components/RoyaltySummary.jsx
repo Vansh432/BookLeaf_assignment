@@ -14,7 +14,8 @@ function StatCard({ icon, label, value, caption, iconClass }) {
   )
 }
 
-function RoyaltySummary({ summary }) {
+// paidCaption lets the admin view describe the author in the third person.
+function RoyaltySummary({ summary, paidCaption = 'Transferred to your bank' }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <StatCard
@@ -35,7 +36,7 @@ function RoyaltySummary({ summary }) {
         icon="checkCircle"
         label="Royalty paid"
         value={formatCurrency(summary.totalRoyaltyPaid)}
-        caption="Transferred to your bank"
+        caption={paidCaption}
         iconClass="bg-emerald-50 text-emerald-600"
       />
 
