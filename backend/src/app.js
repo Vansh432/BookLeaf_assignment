@@ -24,6 +24,13 @@ app.use(cookieParser());
 
 app.use('/api/v1', apiLimiter, routes);
 
+app.get('/',(req,res)=>{
+    return res.status(200).json({
+        status:true,
+        message:"Server is running successfully"
+    })
+})
+
 app.use(notFound);
 app.use(errorHandler);
 
