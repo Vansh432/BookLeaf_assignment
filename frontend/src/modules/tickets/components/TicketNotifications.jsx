@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import Icon from '../../../shared/components/ui/Icon.jsx'
 import { ROLES } from '../../../shared/constants/app.js'
+import { playNotificationSound } from '../../../shared/services/notificationSound.js'
 import { useAuth } from '../../auth/index.js'
 import useTicketChanges from '../hooks/useTicketChanges.js'
 
@@ -36,6 +37,7 @@ function TicketNotifications() {
 
     const toast = { id: `${event.ticketId}-${Date.now()}`, ticketId: event.ticketId, text: buildText(event.ticketNumber) }
     setToasts((current) => [toast, ...current].slice(0, MAX_TOASTS))
+    playNotificationSound()
     setTimeout(() => dismiss(toast.id), TOAST_DURATION_MS)
   })
 

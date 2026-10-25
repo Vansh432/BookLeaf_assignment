@@ -5,6 +5,7 @@ import { TicketNotifications } from '../modules/tickets/index.js'
 import Icon from '../shared/components/ui/Icon.jsx'
 import Logo from '../shared/components/ui/Logo.jsx'
 import { ROLE_LABELS, ROLES } from '../shared/constants/app.js'
+import useNotificationSound from '../shared/hooks/useNotificationSound.js'
 import useSocketStatus from '../shared/hooks/useSocketStatus.js'
 import { connectSocket, disconnectSocket } from '../shared/services/socket.js'
 import { getInitials } from '../shared/utils/format.js'
@@ -42,6 +43,23 @@ function LiveIndicator() {
   )
 }
 
+// Notification chime on/off, remembered in this browser.
+function SoundToggle() {
+  const { enabled, setEnabled } = useNotificationSound()
+
+  return (
+    <button
+      type="button"
+      onClick={() => setEnabled(!enabled)}
+      aria-pressed={enabled}
+      className="mb-3 flex items-center gap-2 rounded-lg px-3 py-1 text-xs font-medium text-brand-100/70 transition hover:bg-white/5 hover:text-white"
+    >
+      <Icon name={enabled ? 'volume' : 'volumeOff'} className="size-4" />
+      {enabled ? 'Notification sound on' : 'Notification sound off'}
+    </button>
+  )
+}
+
 function SidebarContent({ user, onNavigate, onLogout }) {
   return (
     <div className="flex h-full flex-col bg-linear-to-b from-brand-950 via-brand-900 to-brand-800 px-4 py-6">
@@ -63,6 +81,7 @@ function SidebarContent({ user, onNavigate, onLogout }) {
 
       <div className="mt-auto" />
       <LiveIndicator />
+      <SoundToggle />
       <div className="rounded-2xl bg-white/5 p-3 ring-1 ring-white/10">
         <div className="flex items-center gap-3">
           <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-linear-to-br from-brand-300 to-brand-500 text-sm font-bold text-brand-950">
