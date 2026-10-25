@@ -27,7 +27,7 @@ app.use('/api/v1', apiLimiter, routes);
 app.get('/',(req,res)=>{
     return res.status(200).json({
         status:true,
-        message:"Server is running successfully"
+        message:"Server is runing successfully"
     })
 })
 
