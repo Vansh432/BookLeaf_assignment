@@ -1,19 +1,40 @@
-# React + Vite
+# BookLeaf portal: frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React 19 + Vite single-page app for the author and admin portals. See the [project README](../README.md)
+for the full setup, architecture and API.
 
-Currently, two official plugins are available:
+## Run
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+cp .env.example .env   # VITE_API_BASE_URL=http://localhost:5000/api/v1
+npm run dev            # http://localhost:5173
+```
 
-## React Compiler
+| Command | What it does |
+|---|---|
+| `npm run dev` | Development server with hot reload |
+| `npm run build` | Production build to `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run lint` | ESLint (including React hooks rules) |
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+`VITE_API_BASE_URL` is the only variable. It is bundled into the public app, so never put secrets in it.
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+## Structure
 
-## Expanding the ESLint configuration
+```text
+src/
+├── app/            router and providers
+├── layouts/        PortalLayout (sidebar, live-update indicator, notifications)
+├── modules/        one folder per domain: pages, components, services, hooks
+│   ├── auth/       sign-in, session, protected and role routes
+│   ├── books/      My Books, book cards, royalty summary
+│   ├── tickets/    author tickets, admin queue, ticket page, AI draft panel
+│   ├── authors/    admin author directory and author detail
+│   ├── analytics/  admin AI Usage dashboard
+│   └── users/      author lookups used by other modules
+└── shared/         UI components, hooks (useApiQuery, useAction, sockets), API client, formatting
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Modules import each other only through their `index.js`. API calls go through `shared/services/api.js`,
+which sends cookies, refreshes the session once on a 401, and turns failures into a single error shape.
