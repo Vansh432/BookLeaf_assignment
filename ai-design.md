@@ -1,8 +1,7 @@
 # AI design: triage, priority and drafted replies
 
 How the BookLeaf support portal uses AI, why it is built this way, and how well it measurably works.
-For setup and configuration see the [README](../README.md); the original requirements are in
-[AI-integration.md](AI-integration.md).
+For setup, configuration and the live demo see the [README](README.md).
 
 ## Contents
 

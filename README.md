@@ -7,7 +7,15 @@ A support portal for BookLeaf Publishing with two sides:
   BookLeaf's policies and each author's real records, plus an author directory and an AI usage dashboard.
 
 AI never blocks the workflow: tickets are saved first, every AI step has a non-AI fallback, and no reply reaches
-an author without an admin sending it. The design and measured results are in **[docs/ai-design.md](docs/ai-design.md)**.
+an author without an admin sending it. The design and measured results are in **[ai-design.md](ai-design.md)**.
+
+| | |
+|---|---|
+| **Live demo** | **https://app.vanshdeep.space** (sign in with the [demo accounts](#demo-accounts)) |
+| API | https://api.vanshdeep.space/api/v1 ([health check](https://api.vanshdeep.space/api/v1/health)) |
+| Repository | https://github.com/Vansh432/BookLeaf_assignment |
+| Write-up | [WRITEUP.md](WRITEUP.md): approach, trade-offs and the path to production |
+| Manual test script | [manual-testing.md](manual-testing.md) |
 
 ## Contents
 
@@ -104,8 +112,9 @@ npm run dev                 # app on http://localhost:5173
 
 ## Demo accounts
 
-Created by `npm run seed` from the provided sample dataset (10 authors, 18 books). Passwords come from
-`SEED_AUTHOR_PASSWORD` / `SEED_ADMIN_PASSWORD`; the defaults are shown.
+These work on the **[live demo](https://app.vanshdeep.space)** and locally. They are created by `npm run seed` from
+the provided sample dataset (10 authors, 18 books); passwords come from `SEED_AUTHOR_PASSWORD` /
+`SEED_ADMIN_PASSWORD`, and the defaults are shown.
 
 | Role | Email | Password |
 |---|---|---|
@@ -115,7 +124,10 @@ Created by `npm run seed` from the provided sample dataset (10 authors, 18 books
 | Author (book in production) | `sneha.kulkarni@email.com` | `Author@123` |
 | Author (₹850 pending, below payout threshold) | `kavita.deshmukh@email.com` | `Author@123` |
 
-Every author in the dataset can sign in with the author password. A step-by-step test script is in given manual-testing.md file
+Every author in the dataset can sign in with the author password. A step-by-step test script (one author and
+one admin, with expected results) is in [manual-testing.md](manual-testing.md).
+
+Each account allows one active session: signing in again elsewhere signs the earlier session out.
 
 ## Scripts
 
@@ -167,11 +179,11 @@ service → Mongoose model):
 - **Concurrency-safe updates:** status changes, triage, summaries, drafts and budgets all use conditional
   atomic updates, so two admins (or two workers) never overwrite each other.
 - **No Redis or queue server:** AI jobs are low-volume and made durable through MongoDB state, a lease and a sweep.
-  The trade-offs are covered in [docs/ai-design.md](docs/ai-design.md).
+  The trade-offs are covered in [ai-design.md](ai-design.md).
 
 ## AI integration
 
-Summary; details, prompts and measurements in **[docs/ai-design.md](docs/ai-design.md)**.
+Summary; details, prompts and measurements in **[ai-design.md](ai-design.md)**.
 
 | Capability | How it works | Fallback |
 |---|---|---|
@@ -299,19 +311,38 @@ join the admin room. Event `ticket:changed` carries `{ ticketId, ticketNumber, a
   auth, books and ticket endpoints have no automated tests.
 - **`npm run lint` / `npm run build`** (frontend).
 - **`npm run eval` / `npm run eval:live`** (backend): the labeled AI evaluation described in
-  [docs/ai-design.md](docs/ai-design.md#8-evaluation-results). Reports go to `backend/src/tests/eval/reports/` (git-ignored).
-- **Manual:** (manual-testing.md).
+  [ai-design.md](ai-design.md#8-evaluation-results). Reports go to `backend/src/tests/eval/reports/` (git-ignored).
+- **Manual:** [manual-testing.md](manual-testing.md).
 
 ## Deployment
 
+The live demo runs as:
+
+| Part | Host | Address |
+|---|---|---|
+| Frontend | Vercel | `https://app.vanshdeep.space` |
+| API + Socket.IO | Render | `https://api.vanshdeep.space` |
+| Database | MongoDB Atlas | `bookleaf` database with the vector index |
+
+**Serve the frontend and API from the same site.** Here they are two subdomains of one domain. Sessions use
+httpOnly cookies, and browsers that block third-party cookies (Chrome with that setting, and Safari always)
+reject cookies from an API on a different site, such as `*.onrender.com` behind a `*.vercel.app` frontend.
+Sign-in then fails, and so do real-time updates. Subdomains of one domain are the same site, so the cookies are
+first-party and `SameSite=Lax` works. Verified on the live demo with third-party cookies blocked.
+
 1. **Database:** an Atlas cluster with network access for the API host. From a machine with the production
    `.env`, run once: `npm run seed`, `npm run db:indexes`, `npm run kb:ingest`.
-2. **Backend** (e.g. Render or Railway): build `npm install`, start `npm start`. Set `NODE_ENV=production`,
-   `MONGODB_URI`, both JWT secrets, `CLIENT_URLS` (the frontend URL), and the AI variables.
-   If frontend and API are on different domains, set `COOKIE_SAME_SITE=none` (secure cookies follow).
-   The app trusts one proxy hop for client IPs in rate limiting.
-3. **Frontend** (e.g. Vercel or Netlify): build `npm run build`, output `dist/`, with `VITE_API_BASE_URL` set to
-   the API's `/api/v1` URL. Configure the host to serve `index.html` for client-side routes.
+2. **Backend** (Render web service, root `backend/`): build `npm install`, start `npm start`. Add the custom domain
+   (`api.` subdomain, CNAME to the service). Environment:
+   - `NODE_ENV=production`, `MONGODB_URI`, both JWT secrets;
+   - `CLIENT_URLS=https://app.<your-domain>` (exact origin, no trailing slash);
+   - `COOKIE_SAME_SITE=lax`, `COOKIE_SECURE=true`;
+   - the AI variables.
+
+   The app trusts one proxy hop (Render's) for client IPs in rate limiting.
+3. **Frontend** (Vercel project, root `frontend/`): build `npm run build`, output `dist/`. Add the custom domain
+   (`app.` subdomain, CNAME to Vercel) and set `VITE_API_BASE_URL=https://api.<your-domain>/api/v1`, then redeploy,
+   since Vite reads it at build time. `frontend/vercel.json` serves `index.html` for client-side routes.
 4. **AI in production:**
    - Use a **paid Gemini key**: the free tier allows 15 requests per minute and lets Google use prompts, which contain author data.
    - Raise `AI_REQUESTS_PER_MINUTE` to match your quota.
@@ -331,4 +362,4 @@ join the admin room. Event `ticket:changed` carries `{ ticketId, ticketNumber, a
   latest draft.
 - **Test coverage gaps:** the frontend has no test framework (UI flows were verified manually and with a
   headless browser), and the auth, books and core ticket endpoints predate the test suite and have no automated tests.
-- More AI-specific limitations are listed in [docs/ai-design.md](docs/ai-design.md#10-known-limitations).
+- More AI-specific limitations are listed in [ai-design.md](ai-design.md#10-known-limitations).
