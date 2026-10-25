@@ -17,6 +17,13 @@ an author without an admin sending it. The design and measured results are in **
 | Write-up | [WRITEUP.md](WRITEUP.md): approach, trade-offs and the path to production |
 | Manual test script | [manual-testing.md](manual-testing.md) |
 
+> **Note: the first request may be slow.** The backend runs on Render's free tier, which puts the service to sleep
+> after about 15 minutes without traffic. The first request after that wakes it up and can take up to a minute, so
+> the first sign-in may seem to hang. Wait for it to finish, or open the
+> [health check](https://api.vanshdeep.space/api/v1/health) first and sign in once it responds. After that the app
+> responds normally. Background AI triage also pauses while the service sleeps; tickets still waiting are picked up
+> when it wakes.
+
 ## Contents
 
 - [Features](#features)
@@ -351,6 +358,8 @@ first-party and `SameSite=Lax` works. Verified on the live demo with third-party
 
 ## Known limitations
 
+- **Free hosting tier:** the demo backend sleeps after about 15 idle minutes on Render's free plan, so the first
+  request after a pause can take up to a minute. A paid instance (or an uptime ping) removes the delay.
 - **Single-instance AI coordination:** the circuit breaker, request limiter and triage queue are per process.
   Budgets, per-ticket caps and job leases are shared through MongoDB and remain correct with more instances.
 - **Evaluation:** small (59 tickets) and used for tuning, so accuracy figures are optimistic until measured on real
